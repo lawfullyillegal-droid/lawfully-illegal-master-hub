@@ -1,0 +1,134 @@
+name: Deploy Legal Accountability System
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    # Daily at 9 AM UTC for automated posts
+    - cron: '0 9 * * *'
+
+jobs:
+  sync-definitions:
+    name: Sync Legal Definitions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Sync money definitions
+        run: |
+          echo "Syncing money definitions from medium-of-exchange repository..."
+          # Pull latest definitions and update local cache
+          node scripts/sync-repositories.js --repo=medium-of-exchange
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update legal-decipher-system
+        run: |
+          echo "Updating legal-decipher-system with latest definitions..."
+          node scripts/sync-repositories.js --repo=legal-decipher-system
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy to Webador
+        run: |
+          echo "Deploying definitions to Webador API..."
+          node scripts/deploy-definitions.js --target=webador
+        env:
+          WEBADOR_API_KEY: ${{ secrets.WEBADOR_API_KEY }}
+
+  deploy-tools:
+    name: Deploy Integration Tools
+    runs-on: ubuntu-latest
+    needs: sync-definitions
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Deploy NI generator
+        run: |
+          echo "Updating ni-tender-letter-generator with money definitions..."
+          node scripts/deploy-definitions.js --target=ni-generator
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update evidence ledger
+        run: |
+          echo "Syncing evidence-ledger configuration..."
+          node scripts/deploy-definitions.js --target=evidence-ledger
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  social-media-post:
+    name: Daily Legal Definition Post
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Post legal definition
+        run: |
+          echo "Using ai-clone-os to post daily legal definition..."
+          node scripts/social-media-automation.js --action=daily-post
+        env:
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+          FACEBOOK_API_KEY: ${{ secrets.FACEBOOK_API_KEY }}
+          LINKEDIN_API_KEY: ${{ secrets.LINKEDIN_API_KEY }}
+
+  build-api:
+    name: Build and Test API
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build API documentation
+        run: |
+          echo "Generating API documentation..."
+          node scripts/generate-api-docs.js
