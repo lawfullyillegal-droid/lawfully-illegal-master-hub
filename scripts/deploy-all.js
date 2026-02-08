@@ -19,7 +19,7 @@ async function deployAll() {
 
   for (let i = 0; i < steps.length; i++) {
     const step = steps[i];
-    console.log(`\n[${ i + 1}/${steps.length}] ${step.name}`);
+    console.log(`\n[${i + 1}/${steps.length}] ${step.name}`);
     console.log('─'.repeat(60));
     
     try {
