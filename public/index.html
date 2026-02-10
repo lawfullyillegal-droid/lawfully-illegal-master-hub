@@ -274,13 +274,13 @@
       <div class="card">
         <h2>🔗 Quick Links</h2>
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button onclick="window.open('https://www.lawfully-illegal.com', '_blank')" style="background: #28a745;">
+          <button onclick="openSecureLink('https://www.lawfully-illegal.com')" style="background: #28a745;">
             Visit Main Website
           </button>
-          <button onclick="window.open('https://github.com/lawfullyillegal-droid', '_blank')" style="background: #333;">
+          <button onclick="openSecureLink('https://github.com/lawfullyillegal-droid')" style="background: #333;">
             GitHub Repositories
           </button>
-          <button onclick="window.open('https://github.com/lawfullyillegal-droid/lawfully-illegal-master-hub', '_blank')" style="background: #007bff;">
+          <button onclick="openSecureLink('https://github.com/lawfullyillegal-droid/lawfully-illegal-master-hub')" style="background: #007bff;">
             View Documentation
           </button>
         </div>
@@ -450,13 +450,16 @@
 
     // Helper Functions
     function showLoading(element) {
-      element.textContent = '';
       element.innerHTML = '<div class="loading">⏳ Loading...</div>';
     }
 
     function showLoadingMessage(element, message) {
-      element.textContent = '';
       element.innerHTML = `<div class="loading">${message}</div>`;
+    }
+
+    function openSecureLink(url) {
+      const newWindow = window.open(url, '_blank');
+      if (newWindow) newWindow.opener = null;
     }
 
     function showError(element, message) {
