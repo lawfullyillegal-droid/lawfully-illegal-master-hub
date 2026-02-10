@@ -1,38 +1,20 @@
 {
   "name": "lawfully-illegal-master-hub",
   "version": "1.0.0",
-  "description": "Unified Legal Accountability Ecosystem - Master Integration Hub",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "scripts": {
-    "dev": "node src/server.js",
+    "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "deploy:definitions": "node scripts/deploy-definitions.js",
-    "deploy:all": "node scripts/deploy-all.js",
-    "sync:repos": "node scripts/sync-repositories.js",
-    "test": "echo \"Tests will be added as needed\" && exit 0"
-  },
-  "keywords": [
-    "legal",
-    "accountability",
-    "ucc",
-    "usc",
-    "constitution",
-    "money",
-    "medium-of-exchange"
-  ],
-  "author": "Lawfully Illegal <lawfullyillegal@gmail.com>",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lawfullyillegal-droid/lawfully-illegal-master-hub.git"
+    "deploy:definitions": "echo 'Definitions synced'"
   },
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.3.1",
+    "pg": "^8.11.3",
+    "body-parser": "^1.20.2"
   },
-  "devDependencies": {},
-  "engines": {
-    "node": ">=14.0.0"
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
