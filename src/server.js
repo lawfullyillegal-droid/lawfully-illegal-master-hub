@@ -9,6 +9,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const legalApi = require('./api/legal');
 const moneyApi = require('./api/money');
 const statuteApi = require('./api/statute');
@@ -30,8 +31,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, '../public')));
+
 // Health check endpoint
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.json({
     name: 'Lawfully Illegal Master Hub API',
     version: '1.0.0',
@@ -83,8 +87,9 @@ app.listen(PORT, () => {
 ║  Unified Legal Accountability Ecosystem                    ║
 ╚════════════════════════════════════════════════════════════╝
 
-Server running on port ${PORT}
-Environment: ${process.env.NODE_ENV || 'development'}
+🚀 Server running on port ${PORT}
+🌐 Dashboard → http://localhost:${PORT}
+📊 Environment: ${process.env.NODE_ENV || 'development'}
 
 API Endpoints:
   - GET  /api/legal/define/:term
@@ -94,7 +99,7 @@ API Endpoints:
   - POST /api/trust/verify
   - POST /api/tender/generate
 
-Built to Decipher and Overcome Legal Terminology Manipulation
+Built to Decipher and Overcome Legal Terminology Manipulation ⚖️
   `);
 });
 

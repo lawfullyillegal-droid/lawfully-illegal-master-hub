@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lawfully Illegal Master Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+      padding: 20px;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+
+    .card h2 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 10px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.3s ease, transform 0.2s ease;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .result-box {
+      background: #f8f9fa;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 15px;
+      margin-top: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .result-box:empty::before {
+      content: 'Results will appear here...';
+      color: #999;
+      font-style: italic;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #667eea;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 15px;
+      border: 1px solid #c3e6cb;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 15px;
+      border: 1px solid #f5c6cb;
+    }
+
+    footer {
+      text-align: center;
+      color: white;
+      margin-top: 40px;
+      padding: 20px;
+      opacity: 0.9;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #28a745;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🚀 Lawfully Illegal Master Dashboard</h1>
+      <p><span class="status-indicator"></span>Unified Legal Accountability Ecosystem</p>
+      <p>Built to Decipher and Overcome Legal Terminology Manipulation</p>
+    </header>
+
+    <div class="dashboard-grid">
+      <!-- Legal Term Search -->
+      <div class="card">
+        <h2>🔍 Legal Term Search</h2>
+        <div class="input-group">
+          <input 
+            type="text" 
+            id="term" 
+            placeholder="e.g. money, person, corporation, trust, fraud"
+            onkeypress="if(event.key==='Enter') searchTerm()"
+          >
+        </div>
+        <button onclick="searchTerm()">Search Definition</button>
+        <button onclick="listAllTerms()" style="background: #6c757d; margin-top: 5px;">List All Terms</button>
+        <div id="termResult" class="result-box"></div>
+      </div>
+
+      <!-- Money Types -->
+      <div class="card">
+        <h2>💰 Money Types & Definitions</h2>
+        <p style="margin-bottom: 15px; color: #666;">Explore legal definitions of money based on UCC, USC, and Constitutional law.</p>
+        <button onclick="loadMoneyTypes()">Load All Money Types</button>
+        <button onclick="loadMoneyType('commodity')" style="background: #6c757d; margin-top: 5px;">Commodity Money</button>
+        <button onclick="loadMoneyType('fiat')" style="background: #6c757d; margin-top: 5px;">Fiat Money</button>
+        <button onclick="loadMoneyType('credit')" style="background: #6c757d; margin-top: 5px;">Credit Money</button>
+        <div id="moneyResult" class="result-box"></div>
+      </div>
+
+      <!-- Evidence Submission -->
+      <div class="card">
+        <h2>📋 Submit Evidence</h2>
+        <p style="margin-bottom: 15px; color: #666;">Submit evidence with legal citations to the blockchain-timestamped ledger.</p>
+        <div class="input-group">
+          <select id="evidenceType" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 1rem;">
+            <option value="">Select Evidence Type</option>
+            <option value="affidavit">Affidavit</option>
+            <option value="contract">Contract</option>
+            <option value="correspondence">Correspondence</option>
+            <option value="court_document">Court Document</option>
+            <option value="financial_record">Financial Record</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <textarea id="evidence" placeholder="Paste evidence description, affidavit text, or legal citations..."></textarea>
+        </div>
+        <button onclick="submitEvidence()">Submit to Ledger</button>
+        <div id="evidenceResult"></div>
+      </div>
+
+      <!-- Tender Letter Generator -->
+      <div class="card">
+        <h2>📄 Tender Letter Generator</h2>
+        <p style="margin-bottom: 15px; color: #666;">Generate UCC Article 3 compliant negotiable instrument tender letters.</p>
+        <button onclick="generateTender()">Generate Tender Letter</button>
+        <div id="tenderResult" class="result-box"></div>
+      </div>
+
+      <!-- API Status -->
+      <div class="card">
+        <h2>📊 API Status</h2>
+        <p style="margin-bottom: 15px; color: #666;">Check the status of the Master Hub API server.</p>
+        <button onclick="checkAPIStatus()">Check Status</button>
+        <div id="apiResult" class="result-box"></div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="card">
+        <h2>🔗 Quick Links</h2>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button onclick="openSecureLink('https://www.lawfully-illegal.com')" style="background: #28a745;">
+            Visit Main Website
+          </button>
+          <button onclick="openSecureLink('https://github.com/lawfullyillegal-droid')" style="background: #333;">
+            GitHub Repositories
+          </button>
+          <button onclick="openSecureLink('https://github.com/lawfullyillegal-droid/lawfully-illegal-master-hub')" style="background: #007bff;">
+            View Documentation
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>⚖️ Lawfully Illegal Master Hub | <a href="https://www.lawfully-illegal.com">lawfully-illegal.com</a></p>
+      <p>Connecting statutory law with constitutional definitions</p>
+    </footer>
+  </div>
+
+  <script>
+    // Base API URL
+    const API_BASE = window.location.origin;
+
+    // Legal Term Search
+    async function searchTerm() {
+      const term = document.getElementById('term').value.trim();
+      const resultBox = document.getElementById('termResult');
+      
+      if (!term) {
+        showError(resultBox, 'Please enter a legal term to search');
+        return;
+      }
+
+      showLoading(resultBox);
+
+      try {
+        const response = await fetch(`${API_BASE}/api/legal/define/${encodeURIComponent(term)}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Term not found');
+        }
+
+        resultBox.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        showError(resultBox, error.message);
+      }
+    }
+
+    // List All Terms
+    async function listAllTerms() {
+      const resultBox = document.getElementById('termResult');
+      showLoading(resultBox);
+
+      try {
+        const response = await fetch(`${API_BASE}/api/legal/terms`);
+        const data = await response.json();
+        resultBox.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        showError(resultBox, error.message);
+      }
+    }
+
+    // Load All Money Types
+    async function loadMoneyTypes() {
+      const resultBox = document.getElementById('moneyResult');
+      showLoading(resultBox);
+
+      try {
+        const response = await fetch(`${API_BASE}/api/money/types`);
+        const data = await response.json();
+        resultBox.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        showError(resultBox, error.message);
+      }
+    }
+
+    // Load Specific Money Type
+    async function loadMoneyType(type) {
+      const resultBox = document.getElementById('moneyResult');
+      showLoading(resultBox);
+
+      try {
+        const response = await fetch(`${API_BASE}/api/money/types/${type}`);
+        const data = await response.json();
+        resultBox.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        showError(resultBox, error.message);
+      }
+    }
+
+    // Submit Evidence
+    async function submitEvidence() {
+      const evidenceType = document.getElementById('evidenceType').value;
+      const evidenceText = document.getElementById('evidence').value.trim();
+      const resultBox = document.getElementById('evidenceResult');
+
+      if (!evidenceType) {
+        showErrorMessage(resultBox, 'Please select an evidence type');
+        return;
+      }
+
+      if (!evidenceText) {
+        showErrorMessage(resultBox, 'Please enter evidence description');
+        return;
+      }
+
+      showLoadingMessage(resultBox, 'Submitting evidence to blockchain ledger...');
+
+      try {
+        const response = await fetch(`${API_BASE}/api/evidence/submit`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            evidence_type: evidenceType,
+            description: evidenceText,
+            legal_citations: [],
+            submitter_info: {
+              timestamp: new Date().toISOString()
+            }
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Submission failed');
+        }
+
+        showSuccessMessage(resultBox, 
+          `✓ Evidence submitted successfully!\n\n` +
+          `Submission ID: ${data.submission.id}\n` +
+          `Blockchain Hash: ${data.submission.blockchain_hash}\n` +
+          `Timestamp: ${data.submission.submission_date}`
+        );
+
+        // Clear form
+        document.getElementById('evidence').value = '';
+        document.getElementById('evidenceType').value = '';
+      } catch (error) {
+        showErrorMessage(resultBox, error.message);
+      }
+    }
+
+    // Generate Tender Letter
+    async function generateTender() {
+      const resultBox = document.getElementById('tenderResult');
+      showLoading(resultBox);
+
+      try {
+        const response = await fetch(`${API_BASE}/api/tender/generate`);
+        const data = await response.json();
+        resultBox.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        showError(resultBox, error.message);
+      }
+    }
+
+    // Check API Status
+    async function checkAPIStatus() {
+      const resultBox = document.getElementById('apiResult');
+      showLoading(resultBox);
+
+      try {
+        const response = await fetch(`${API_BASE}/api`);
+        const data = await response.json();
+        resultBox.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        showError(resultBox, error.message);
+      }
+    }
+
+    // Helper Functions
+    function showLoading(element) {
+      element.innerHTML = '<div class="loading">⏳ Loading...</div>';
+    }
+
+    function showLoadingMessage(element, message) {
+      element.innerHTML = `<div class="loading">${message}</div>`;
+    }
+
+    function openSecureLink(url) {
+      const newWindow = window.open(url, '_blank');
+      if (newWindow) newWindow.opener = null;
+    }
+
+    function showError(element, message) {
+      element.textContent = `Error: ${message}`;
+      element.style.color = '#dc3545';
+    }
+
+    function showErrorMessage(element, message) {
+      element.innerHTML = `<div class="error-message">❌ ${message}</div>`;
+    }
+
+    function showSuccessMessage(element, message) {
+      element.innerHTML = `<div class="success-message">${message}</div>`;
+    }
+
+    // Auto-check API status on page load
+    window.addEventListener('load', () => {
+      checkAPIStatus();
+    });
+  </script>
+</body>
+</html>
